@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Collection, ObjectId } from 'mongodb';
-import { Wire } from '../models/wire';
+import { Wire } from '../models/wire.js';
 
 
 

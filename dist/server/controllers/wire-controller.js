@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { Wire } from '../models/wire';
+import { Wire } from '../models/wire.js';
 export class WiresController {
     GetWires(req, res) {
         const collection = req.app.locals.collection;

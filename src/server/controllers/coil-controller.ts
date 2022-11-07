@@ -68,7 +68,7 @@ export class CoilController {
 
         const collection: Collection = req.app.locals.coilcollection;
 
-        const newcoil: Coil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
+        const newcoil: Coil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
 
         collection.insertOne(newcoil, function (err, result) {
 
@@ -94,7 +94,7 @@ export class CoilController {
 
         const _coilid: ObjectId = new ObjectId(req.body._id); 
 
-        const editcoil: Coil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
+        const editcoil: Coil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
 
         const collection: Collection = req.app.locals.coilcollection;
 

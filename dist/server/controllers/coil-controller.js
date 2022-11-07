@@ -32,7 +32,7 @@ export class CoilController {
             return res.status(400).send("Bad request");
         }
         const collection = req.app.locals.coilcollection;
-        const newcoil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
+        const newcoil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
         collection.insertOne(newcoil, function (err, result) {
             if (err) {
                 return console.log(err);
@@ -47,7 +47,7 @@ export class CoilController {
             return res.status(400).send("Bad Request");
         }
         const _coilid = new ObjectId(req.body._id);
-        const editcoil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
+        const editcoil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
         const collection = req.app.locals.coilcollection;
         collection.findOneAndUpdate({ _id: _coilid }, { $set: editcoil }, function (err, result) {
             if (err) {
