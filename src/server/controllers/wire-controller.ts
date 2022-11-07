@@ -20,8 +20,24 @@ export class WiresController {
             return console.log(result);
 
 
-        })
+        });
 
+
+    }
+
+    GetOrderWires(req: Request,res:Response) {
+
+        if (!req.body) {
+
+            console.log("Empty request");
+            return res.status(400).send("Bad request");
+
+        }
+
+        const group: string = req.params.group;
+        const order: string = req.params.order;
+
+        const collection: Collection = req.app.locals.collection;
 
     }
 

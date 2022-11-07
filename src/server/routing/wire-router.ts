@@ -8,5 +8,6 @@ wirerouter.post("/postwire", wirecontroller.PostWire);
 wirerouter.put("/putwire", wirecontroller.EditWire);
 wirerouter.delete("/deletewire/:_id", wirecontroller.DeleteWire);
 wirerouter.get("/", wirecontroller.GetWires);
+wirerouter.get("/:group/:order", wirecontroller.GetOrderWires);
 
 
