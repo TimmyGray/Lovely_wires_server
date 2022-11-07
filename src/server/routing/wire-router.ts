@@ -5,7 +5,7 @@ export const wirerouter = Router();
 const wirecontroller = new WiresController();
 
 wirerouter.post("/postwire", wirecontroller.PostWire);
-wirerouter.put("/editwire", wirecontroller.EditWire);
+wirerouter.put("/putwire", wirecontroller.EditWire);
 wirerouter.delete("/deletewire/:_id", wirecontroller.DeleteWire);
 wirerouter.get("/", wirecontroller.GetWires);
 

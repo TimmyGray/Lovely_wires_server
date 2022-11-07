@@ -1,4 +1,5 @@
 import Express from 'express';
+import Cors from 'cors';
 import { wirerouter } from './routing/wire-router.js';
 import { coilrouter } from './routing/coil-router.js';
 import { MongoClient} from 'mongodb';
@@ -10,7 +11,7 @@ let dbclient: MongoClient | undefined;
 
 const server = Express();
 
-
+server.use(Cors());
 
 server.use(function (req, res, next) {
 

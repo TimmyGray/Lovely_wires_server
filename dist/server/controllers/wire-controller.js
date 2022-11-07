@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb';
+import { Wire } from '../models/wire';
 export class WiresController {
     GetWires(req, res) {
         const collection = req.app.locals.collection;
@@ -13,15 +14,11 @@ export class WiresController {
     PostWire(req, res) {
         if (!req.body) {
             console.log("Empty request");
-            return res.status(400).send("No content");
+            return res.status(400).send("Bad request");
         }
-        const wirename = req.body.name;
-        const wirefirstconn = req.body.firstconn;
-        const wiresecondconn = req.body.secondconn;
-        const wirelength = req.body.length;
-        const wire = { name: wirename, firstconn: wirefirstconn, secondconn: wiresecondconn, length: wirelength };
+        const newwire = new Wire(req.body.wirename, req.body.wirefirstconn, req.body.wiresecondconn, req.body.wirelength, req.body.wirecoil);
         const collection = req.app.locals.collection;
-        collection.insertOne(wire, function (err, result) {
+        collection.insertOne(newwire, function (err, result) {
             if (err) {
                 return console.log(err);
             }
@@ -32,15 +29,12 @@ export class WiresController {
     EditWire(req, res) {
         if (!req.body) {
             console.log("Empty request");
-            return res.status(400).send("No content");
+            return res.status(400).send("Bad request");
         }
         const id = new ObjectId(req.body._id);
-        const wirename = req.body.name;
-        const wirefirstconn = req.body.firstconn;
-        const wiresecondconn = req.body.secondconn;
-        const wirelength = req.body.length;
+        const editwire = new Wire(req.body.wirename, req.body.wirefirstconn, req.body.wiresecondconn, req.body.wirelength, req.body.wirecoil);
         const collection = req.app.locals.collection;
-        collection.findOneAndUpdate({ _id: id }, { $set: { name: wirename, firstconn: wirefirstconn, secondconn: wiresecondconn, length: wirelength } }, function (err, result) {
+        collection.findOneAndUpdate({ _id: id }, { $set: editwire }, function (err, result) {
             if (err) {
                 return console.log(err);
             }
@@ -51,7 +45,7 @@ export class WiresController {
     DeleteWire(req, res) {
         if (!req.body) {
             console.log("Empty request");
-            return res.status(400).send("No content");
+            return res.status(400).send("Bad request");
         }
         const id = new ObjectId(req.params._id);
         const collection = req.app.locals.collection;

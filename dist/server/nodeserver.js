@@ -1,4 +1,5 @@
 import Express from 'express';
+import Cors from 'cors';
 import { wirerouter } from './routing/wire-router.js';
 import { coilrouter } from './routing/coil-router.js';
 import { MongoClient } from 'mongodb';
@@ -6,6 +7,7 @@ const connectiondb = new MongoClient("mongodb://127.0.0.1:27017");
 const port = 3200;
 let dbclient;
 const server = Express();
+server.use(Cors());
 server.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept");

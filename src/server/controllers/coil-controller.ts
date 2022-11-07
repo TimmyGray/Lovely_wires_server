@@ -1,5 +1,6 @@
 import { Request, response, Response } from 'express';
 import { Collection, ObjectId } from 'mongodb';
+import { Coil } from '../models/coil.js';
 
 export class CoilController {
 
@@ -65,14 +66,11 @@ export class CoilController {
 
         }
 
-        const _coilname = req.body.coilname;
-        const _coiltype = req.body.coiltype;
-        const _coilcorenumber = req.body.coilcorenumber;
-        const _coillength = req.body.coillength;
-
         const collection: Collection = req.app.locals.coilcollection;
 
-        collection.insertOne({ coilname: _coilname, coiltype: _coiltype, coilcorenumber: _coilcorenumber, coillength: _coillength }, function (err, result) {
+        const newcoil: Coil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
+
+        collection.insertOne(newcoil, function (err, result) {
 
             if (err) {
                 return console.log(err);
@@ -95,14 +93,13 @@ export class CoilController {
         }
 
         const _coilid: ObjectId = new ObjectId(req.body._id); 
-        const _coilname = req.body.coilname;
-        const _coiltype = req.body.coiltype;
-        const _coilcorenumber = req.body.coilcorenumber;
-        const _coillength = req.body.coillength;
+
+        const editcoil: Coil = new Coil(req.body.coilname, req.body.coiltype, req.body.coilcorenumber, req.body.coillength);
 
         const collection: Collection = req.app.locals.coilcollection;
 
-        collection.findOneAndUpdate({ _id: _coilid }, { $set: { coilname: _coilname, coiltype: _coiltype, coilcorenumber: _coilcorenumber, coillength: _coillength } },
+        collection.findOneAndUpdate({ _id: _coilid }, { $set: editcoil  },
+
             function (err, result) {
 
                 if (err) {
@@ -114,7 +111,8 @@ export class CoilController {
                 res.send(result);
                 return console.log(result);
 
-        });
+            }
+        );
 
     }
 
