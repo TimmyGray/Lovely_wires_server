@@ -34,7 +34,7 @@ export class WiresController {
         }
 
 
-        const newwire: Wire = new Wire(req.body.wirename, req.body.wirefirstconn, req.body.wiresecondconn, req.body.wirelength, req.body.wirecoil);
+        const newwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
         const collection: Collection = req.app.locals.collection;
 
         collection.insertOne(newwire, function (err, result) {
@@ -66,7 +66,7 @@ export class WiresController {
 
         const id = new ObjectId(req.body._id);
 
-        const editwire: Wire = new Wire(req.body.wirename, req.body.wirefirstconn, req.body.wiresecondconn, req.body.wirelength, req.body.wirecoil);
+        const editwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
         const collection: Collection = req.app.locals.collection;
 
         collection.findOneAndUpdate({ _id: id }, { $set: editwire }, function (err, result) {
