@@ -5,24 +5,21 @@ import { coilrouter } from './routing/coil-router.js';
 import { MongoClient} from 'mongodb';
 import console from 'console';
 import { env } from 'process';
-import { getEnvironmentData } from 'worker_threads';
 
 const connectiondb: MongoClient = new MongoClient("mongodb://127.0.0.1:28015");
 
 const port: string | number = process.env.PORT || 3200;
-const port2: string | number = process.env.PORT || 3202;
-
+//const port2: string | number = process.env.PORT || 3202;
 
 let dbclient: MongoClient | undefined;
 
 const server = Express();
-const server2 = Express();
+//const server2 = Express();
 
-server2.listen(port2, function () {
-    console.log("server two is listen too");
-});
+
 
 server.use(Cors());
+//server2.use(Cors());
 
 server.use(function (req, res, next) {
 
@@ -34,14 +31,20 @@ server.use(function (req, res, next) {
 });
 
 connectiondb.connect(function (err, client) {
-    if (err) return console.log(err);
+    if (err) { return console.log(err); }
+
     dbclient = client;
     server.locals.collection = client?.db("wiresdb").collection("wires");
     server.locals.coilcollection = client?.db("wiresdb").collection("coils");
+    //server2.locals.collection = client?.db("wiresdb").collection("wires")
 
-    server.listen(port , function () {
-        console.log(`Server listen on port ${port}...`);
+    server.listen(port, function () {
+        console.log(`create client server listen on port ${port}...`);
     });
+
+    //server2.listen(port2, function () {
+    //    console.log(`buy client server listen on port ${port2}...`);
+    //});
 });
 
 server.use(Express.json());
@@ -62,6 +65,7 @@ process.on("SIGINT", () => {
   process.exit();
 
 })
+
 
 
 

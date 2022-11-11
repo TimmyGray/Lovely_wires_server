@@ -1,6 +1,6 @@
 {
   "name": "node_server",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "simple server for testwork",
   "author": "Timmy",
   "scripts": {
