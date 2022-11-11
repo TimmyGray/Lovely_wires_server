@@ -35,10 +35,85 @@ export class WiresController {
         }
 
         const group: string = req.params.group;
-        const order: string = req.params.order;
+        const order: number = parseInt(req.params.order);
 
         const collection: Collection = req.app.locals.collection;
 
+        switch (group) {
+
+            case 'firstconnector': {
+
+                collection.aggregate([
+
+                    { $sort: { "firstconn": order } }
+
+                ]).toArray(function (err, result) {
+
+                    if (err) {
+
+                        return console.log(err);
+
+                    }
+
+                    res.send(result);
+                    return console.log(result);
+
+                });
+
+                break;
+
+            }
+
+            case 'length': {
+
+                collection.aggregate([
+
+                    { $sort: { "length": order } }
+
+                ]).toArray(function (err, result) {
+
+                    if (err) {
+
+                        return console.log(err);
+
+                    }
+
+                    res.send(result);
+                    return console.log(result);
+
+                });
+
+                break;
+
+            }
+
+            case 'secondconnector': {
+
+                collection.aggregate([
+
+                    { $sort: { "secondconn": order } }
+
+                ]).toArray(function (err, result) {
+
+                    if (err) {
+
+                        return console.log(err);
+
+                    }
+
+                    res.send(result);
+                    return console.log(result);
+
+                });
+
+                break;
+
+            }
+
+        }
+     
+
+        
     }
 
     PostWire(req: Request, res: Response) {

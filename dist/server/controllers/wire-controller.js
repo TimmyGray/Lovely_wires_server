@@ -11,6 +11,53 @@ export class WiresController {
             return console.log(result);
         });
     }
+    GetOrderWires(req, res) {
+        if (!req.body) {
+            console.log("Empty request");
+            return res.status(400).send("Bad request");
+        }
+        const group = req.params.group;
+        const order = parseInt(req.params.order);
+        const collection = req.app.locals.collection;
+        switch (group) {
+            case 'firstconnector': {
+                collection.aggregate([
+                    { $sort: { "firstconn": order } }
+                ]).toArray(function (err, result) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    res.send(result);
+                    return console.log(result);
+                });
+                break;
+            }
+            case 'length': {
+                collection.aggregate([
+                    { $sort: { "length": order } }
+                ]).toArray(function (err, result) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    res.send(result);
+                    return console.log(result);
+                });
+                break;
+            }
+            case 'secondconnector': {
+                collection.aggregate([
+                    { $sort: { "secondconn": order } }
+                ]).toArray(function (err, result) {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    res.send(result);
+                    return console.log(result);
+                });
+                break;
+            }
+        }
+    }
     PostWire(req, res) {
         if (!req.body) {
             console.log("Empty request");

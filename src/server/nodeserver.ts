@@ -3,13 +3,24 @@ import Cors from 'cors';
 import { wirerouter } from './routing/wire-router.js';
 import { coilrouter } from './routing/coil-router.js';
 import { MongoClient} from 'mongodb';
+import console from 'console';
+import { env } from 'process';
+import { getEnvironmentData } from 'worker_threads';
 
-const connectiondb = new MongoClient("mongodb://127.0.0.1:27017");
-const port = 3200;
+const connectiondb: MongoClient = new MongoClient("mongodb://127.0.0.1:28015");
+
+const port: string | number = process.env.PORT || 3200;
+const port2: string | number = process.env.PORT || 3202;
+
 
 let dbclient: MongoClient | undefined;
 
 const server = Express();
+const server2 = Express();
+
+server2.listen(port2, function () {
+    console.log("server two is listen too");
+});
 
 server.use(Cors());
 
@@ -28,7 +39,7 @@ connectiondb.connect(function (err, client) {
     server.locals.collection = client?.db("wiresdb").collection("wires");
     server.locals.coilcollection = client?.db("wiresdb").collection("coils");
 
-    server.listen(port, function () {
+    server.listen(port , function () {
         console.log(`Server listen on port ${port}...`);
     });
 });

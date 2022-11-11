@@ -3,10 +3,16 @@ import Cors from 'cors';
 import { wirerouter } from './routing/wire-router.js';
 import { coilrouter } from './routing/coil-router.js';
 import { MongoClient } from 'mongodb';
-const connectiondb = new MongoClient("mongodb://127.0.0.1:27017");
-const port = 3200;
+import console from 'console';
+const connectiondb = new MongoClient("mongodb://127.0.0.1:28015");
+const port = process.env.PORT || 3200;
+const port2 = process.env.PORT || 3202;
 let dbclient;
 const server = Express();
+const server2 = Express();
+server2.listen(port2, function () {
+    console.log("server two is listen too");
+});
 server.use(Cors());
 server.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
