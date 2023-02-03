@@ -1,7 +1,12 @@
+import { IItem } from "./IItem";
 
-export class Coil {
+export class Coil implements IItem {
 
-    constructor(public name: string,public type: string, public corenumber: string, public length: number,) { }
+    constructor(
+        public name: string,
+        public type: string,
+        public typeofsignal: string,
+        public length: number,) { }
 
 
 }

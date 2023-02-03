@@ -4,7 +4,7 @@ import { Coil } from '../models/coil.js';
 
 export class CoilController {
 
-    GetCoils(req:Request,res:Response) {
+    getCoils(req:Request,res:Response) {
 
         const collection: Collection = req.app.locals.coilcollection;
 
@@ -16,9 +16,9 @@ export class CoilController {
 
             }
 
-            res.send(result);
+            console.log(result);
+            return res.send(result);
 
-            return console.log(result);
 
 
         })
@@ -26,7 +26,7 @@ export class CoilController {
 
     }
 
-    GetOneCoil(req:Request,res:Response) {
+    getCoil(req:Request,res:Response) {
 
         if (!req.body) {
 
@@ -43,13 +43,14 @@ export class CoilController {
 
             if (err) {
 
-                return console.log(err);
+                console.log(err);
+                return res.status(400).send(err);
 
             }
 
-            res.send(result);
+            console.log(result);
+            return res.send(result);
 
-            return console.log(result);
 
 
         });
@@ -57,7 +58,7 @@ export class CoilController {
 
     }
 
-    PostCoil(req: Request, res: Response) {
+    postCoil(req: Request, res: Response) {
 
         if (!req.body) {
 
@@ -68,23 +69,32 @@ export class CoilController {
 
         const collection: Collection = req.app.locals.coilcollection;
 
-        const newcoil: Coil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
+        const newcoil: Coil = new Coil(req.body.name, req.body.type, req.body.typeofsignal, req.body.length);
 
         collection.insertOne(newcoil, function (err, result) {
 
             if (err) {
-                return console.log(err);
+
+                console.log(err);
+                return res.status(400).send(err);
+
             }
 
 
-            res.send(result);
+            console.log(result);
+            return res.send({
+                _id: result?.insertedId,
+                name: newcoil.name,
+                type: newcoil.type,
+                typeofsignal: newcoil.typeofsignal,
+                length: newcoil.length
+            });
 
-            return console.log(result);
 
         });
     }
 
-    EditCoil(req: Request, res: Response) {
+    editCoil(req: Request, res: Response) {
 
         if (!req.body) {
 
@@ -94,29 +104,31 @@ export class CoilController {
 
         const _coilid: ObjectId = new ObjectId(req.body._id); 
 
-        const editcoil: Coil = new Coil(req.body.name, req.body.type, req.body.corenumber, req.body.length);
+        const editcoil: Coil = new Coil(req.body.name, req.body.type, req.body.typeofsignal, req.body.length);
 
         const collection: Collection = req.app.locals.coilcollection;
 
-        collection.findOneAndUpdate({ _id: _coilid }, { $set: editcoil  },
+        collection.findOneAndUpdate({ _id: _coilid }, { $set: editcoil }, { returnDocument: 'after' },
 
             function (err, result) {
 
                 if (err) {
 
-                    return console.log(err);
+                    console.log(err);
+                    return res.status(400).send(err);
 
                 }
 
-                res.send(result);
-                return console.log(result);
+                console.log(result);
+                return res.send(result);
+
 
             }
         );
 
     }
 
-    DeleteCoil(req: Request, res: Response) {
+    deleteCoil(req: Request, res: Response) {
 
         if (!req.body) {
 
@@ -132,11 +144,15 @@ export class CoilController {
         collection.findOneAndDelete({ _id: _coilid }, function (err, result) {
 
             if (err) {
-                return console.log(err);
+
+                console.log(err);
+                return res.status(400).send(err);
+
             }
 
-            res.send(result);
-            return console.log(result);
+            console.log(result);
+            return res.send(result);
+
 
         })
 

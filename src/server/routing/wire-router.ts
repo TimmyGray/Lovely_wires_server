@@ -4,10 +4,11 @@ import { Router } from 'express';
 export const wirerouter = Router();
 const wirecontroller = new WiresController();
 
-wirerouter.post("/postwire", wirecontroller.PostWire);
-wirerouter.put("/putwire", wirecontroller.EditWire);
-wirerouter.delete("/deletewire/:_id", wirecontroller.DeleteWire);
-wirerouter.get("/", wirecontroller.GetWires);
-wirerouter.get("/:group/:order", wirecontroller.GetOrderWires);
+wirerouter.post("/postwire", wirecontroller.postWire);
+wirerouter.put("/putwire", wirecontroller.editWire);
+wirerouter.delete("/deletewire/:_id", wirecontroller.deleteWire);
+wirerouter.get("/_id", wirecontroller.getWire);
+wirerouter.get("/", wirecontroller.getWires);
+wirerouter.get("/:group/:order", wirecontroller.getOrderWires);
 
 

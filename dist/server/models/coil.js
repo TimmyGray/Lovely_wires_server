@@ -1,8 +1,8 @@
 export class Coil {
-    constructor(name, type, corenumber, length) {
+    constructor(name, type, typeofsignal, length) {
         this.name = name;
         this.type = type;
-        this.corenumber = corenumber;
+        this.typeofsignal = typeofsignal;
         this.length = length;
     }
 }

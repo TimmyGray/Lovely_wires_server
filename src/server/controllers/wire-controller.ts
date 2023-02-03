@@ -7,17 +7,19 @@ import { Wire } from '../models/wire.js';
 
 export class WiresController {
 
-    GetWires(req: Request, res: Response) {
+    getWires(req: Request, res: Response) {
 
-        const collection: Collection = req.app.locals.collection;
+        const collection: Collection = req.app.locals.wirecollection;
 
         collection.find({}).toArray(function (err, result) {
             if (err) {
-                return console.log(err);
+
+                console.log(err);
+                return res.status(400).send(err);
             }
 
-            res.send(result);
-            return console.log(result);
+            console.log(result);
+            return res.send(result);
 
 
         });
@@ -25,7 +27,35 @@ export class WiresController {
 
     }
 
-    GetOrderWires(req: Request,res:Response) {
+    getWire(req: Request, res: Response) {
+
+        if (!req.body) {
+
+            console.log("Empty request");
+            return res.status(400).send("Bad request");
+
+        }
+
+        const id: ObjectId = new ObjectId(req.params._id);
+        const collection: Collection = req.app.locals.wirescollection;
+
+        collection.findOne({ _id: id }, (e, data) => {
+
+            if (e) {
+
+                console.log(e);
+                return res.status(204).send("No content");
+
+            }
+
+            console.log(data);
+            return res.send(data);
+
+        });
+
+    }
+
+    getOrderWires(req: Request,res:Response) {
 
         if (!req.body) {
 
@@ -37,7 +67,7 @@ export class WiresController {
         const group: string = req.params.group;
         const order: number = parseInt(req.params.order);
 
-        const collection: Collection = req.app.locals.collection;
+        const collection: Collection = req.app.locals.wirecollection;
 
         switch (group) {
 
@@ -51,12 +81,13 @@ export class WiresController {
 
                     if (err) {
 
-                        return console.log(err);
+                        console.log(err);
+                        return res.status(400).send(err);
 
                     }
 
-                    res.send(result);
-                    return console.log(result);
+                    console.log(result);
+                    return res.send(result);
 
                 });
 
@@ -74,12 +105,13 @@ export class WiresController {
 
                     if (err) {
 
-                        return console.log(err);
+                        console.log(err);
+                        return res.status(400).send(err);
 
                     }
 
-                    res.send(result);
-                    return console.log(result);
+                    console.log(result);
+                    return res.send(result);
 
                 });
 
@@ -97,12 +129,12 @@ export class WiresController {
 
                     if (err) {
 
-                        return console.log(err);
-
+                        console.log(err);
+                        return res.status(400).send(err);
                     }
-
-                    res.send(result);
-                    return console.log(result);
+                    
+                    console.log(result);
+                    return res.send(result);
 
                 });
 
@@ -116,7 +148,7 @@ export class WiresController {
         
     }
 
-    PostWire(req: Request, res: Response) {
+    postWire(req: Request, res: Response) {
 
         if (!req.body) {
 
@@ -126,7 +158,7 @@ export class WiresController {
 
 
         const newwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
-        const collection: Collection = req.app.locals.collection;
+        const collection: Collection = req.app.locals.wirecollection;
 
         collection.insertOne(newwire, function (err, result) {
 
@@ -135,8 +167,16 @@ export class WiresController {
                 return console.log(err);
             }
 
-            res.send(result);
-            return console.log(result);
+            console.log(result);
+
+            return res.send({
+                _id: result?.insertedId,
+                name: newwire.name,
+                firstconn: newwire.firstconn,
+                secondconn: newwire.secondconn,
+                length: newwire.length,
+                coil: newwire.coil
+            });
 
 
         })
@@ -147,7 +187,7 @@ export class WiresController {
     }
 
 
-    EditWire(req: Request, res: Response) {
+    editWire(req: Request, res: Response) {
 
         if (!req.body) {
             console.log("Empty request");
@@ -158,18 +198,20 @@ export class WiresController {
         const id = new ObjectId(req.body._id);
 
         const editwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
-        const collection: Collection = req.app.locals.collection;
+        const collection: Collection = req.app.locals.wirecollection;
 
-        collection.findOneAndUpdate({ _id: id }, { $set: editwire }, function (err, result) {
+        collection.findOneAndUpdate({ _id: id }, { $set: editwire }, { returnDocument: 'after' }, function (err, result) {
 
             if (err) {
 
-                return console.log(err);
+                console.log(err);
+                return res.status(400).send(err);
 
             }
 
-            res.send(result);
-            return console.log(result);
+            console.log(result?.value);
+
+            return res.send(result?.value);
 
 
         });
@@ -179,7 +221,7 @@ export class WiresController {
     }
   
 
-    DeleteWire(req: Request, res: Response) {
+    deleteWire(req: Request, res: Response) {
 
         if (!req.body) {
             console.log("Empty request");
@@ -188,7 +230,7 @@ export class WiresController {
 
         const id = new ObjectId(req.params._id);
 
-        const collection: Collection = req.app.locals.collection;
+        const collection: Collection = req.app.locals.wirecollection;
 
         collection.findOneAndDelete({ _id: id }, function (err, result) {
 
