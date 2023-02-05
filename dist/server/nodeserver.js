@@ -7,10 +7,10 @@ import { connectorrouter } from './routing/connector-router.js';
 import { pricerouter } from './routing/price-router.js';
 import { buyrouter } from './routing/buy-router.js';
 import { MongoClient } from 'mongodb';
+import * as mongodb from 'mongodb';
 import console from 'console';
-const connectiondb = new MongoClient("mongodb://127.0.0.1:12908");
+const mongoclient = new MongoClient("mongodb://127.0.0.1:12908");
 const port = process.env.PORT || 3200;
-let dbclient;
 const server = Express();
 server.use(Cors());
 server.use(function (req, res, next) {
@@ -19,20 +19,22 @@ server.use(function (req, res, next) {
     res.header("Access-Control-Allow-Methods", "GET,PUT,PATCH,POST,DELETE,OPTIONS");
     next();
 });
-connectiondb.connect(function (err, client) {
+mongoclient.connect(function (err, client) {
     if (err) {
         return console.log(err);
     }
-    dbclient = client;
-    server.locals.wirecollection = client?.db("wiresdb").collection("wires");
-    server.locals.coilcollection = client?.db("wiresdb").collection("coils");
-    server.locals.ordercollection = client?.db('wiresdb').collection('orders');
-    server.locals.connectorcollection = client?.db('wiresdb').collection('connectors');
-    server.locals.pricecollection = client?.db('wiresdb').collection('prices');
-    server.locals.buyscollection = client?.db('wiresdb').collection('buys');
-    server.listen(port, function () {
-        console.log(`create client server listen on port ${port}...`);
-    });
+    if (client != null) {
+        server.locals.wirecollection = client.db("wiresdb").collection("wires");
+        server.locals.coilcollection = client.db("wiresdb").collection("coils");
+        server.locals.ordercollection = client.db('wiresdb').collection('orders');
+        server.locals.connectorcollection = client.db('wiresdb').collection('connectors');
+        server.locals.pricecollection = client.db('wiresdb').collection('prices');
+        server.locals.buyscollection = client.db('wiresdb').collection('buys');
+        server.locals.imagestorage = new mongodb.GridFSBucket(client.db("wiresdb"), { bucketName: "imagestore" });
+        server.listen(port, function () {
+            console.log(`create client server listen on port ${port}...`);
+        });
+    }
 });
 server.use(Express.json());
 server.use("/api/wires", wirerouter);
@@ -45,7 +47,7 @@ server.use(function (req, res, next) {
     res.status(404).send("Not Found");
 });
 process.on("SIGINT", () => {
-    dbclient?.close();
+    mongoclient.close();
     process.exit();
 });
 //# sourceMappingURL=nodeserver.js.map

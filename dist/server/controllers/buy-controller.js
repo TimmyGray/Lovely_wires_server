@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Buy } from '../models/buy.js';
+import { Image } from '../models/image.js';
 export class BuyController {
     getBuys(req, res) {
         const collection = req.app.locals.buyscollection;
@@ -34,7 +35,7 @@ export class BuyController {
             return res.status(400).send("Bad request");
         }
         const id = new ObjectId(req.body._id);
-        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count);
+        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, null);
         const collection = req.app.locals.buyscollection;
         collection.findOneAndUpdate({ _id: id }, { $set: buy }, { returnDocument: 'after' }, (e, data) => {
             if (e) {
@@ -50,8 +51,27 @@ export class BuyController {
             console.log("Empty request");
             return res.status(400).send("Bad request");
         }
-        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count);
+        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, null);
         const collection = req.app.locals.buyscollection;
+        const imagestrore = req.app.locals.imagestore;
+        let image = req.file;
+        if (image) {
+            //let id: ObjectId = fs.createReadStream(image.path).pipe(imagestrore.openUploadStream(image.originalname)).id;
+            let nameforsave = 'wireImage' + `${Date.now()}`;
+            let imageid = image.stream.pipe(imagestrore.openUploadStream(nameforsave)).id;
+            let finalimg = new Image(imageid, nameforsave, image.buffer, image.size, image.mimetype);
+            buy.image = finalimg;
+            //var filetosave = fs.readFile(image.path, (e, data) => {
+            //	if (e) {
+            //		console.log(e)
+            //	}
+            //	if (image != null) {
+            //             }
+            //});
+        }
+        else {
+            console.log("Не подходящий файл");
+        }
         collection.insertOne(buy, (e, data) => {
             if (e) {
                 console.log(e);
@@ -64,7 +84,14 @@ export class BuyController {
                 description: buy.description,
                 item: buy.item,
                 cost: buy.cost,
-                count: buy.count
+                count: buy.count,
+                img: {
+                    _id: buy.image?._id,
+                    name: buy.image?.name,
+                    size: buy.image?.size,
+                    bytes: buy.image?.bytes,
+                    type: buy.image?.type
+                }
             });
         });
     }

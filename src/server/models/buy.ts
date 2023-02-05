@@ -1,4 +1,5 @@
 import { IItem } from "./IItem.js";
+import { Image } from "./image.js";
 
 export class Buy {
 
@@ -7,6 +8,7 @@ export class Buy {
         public description: string,
         public cost: number,
         public item: string,
-        public count: number) { }
+        public count: number,
+        public image: Image | null) { }
 
 }
