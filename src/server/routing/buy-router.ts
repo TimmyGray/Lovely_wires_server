@@ -1,35 +1,29 @@
 import { Router } from 'express';
 import multer from 'multer';
 import { BuyController } from '../controllers/buy-controller.js';
-//import { uploader } from '../uploadservice/upload.js';
-
-//import * as multer from 'multer';
 import { Request } from 'express';
+import mime from 'mime';
 
-const filter = function (req: Request, image: Express.Multer.File, cb: multer.FileFilterCallback) {
+const mystorage = multer.diskStorage({
 
-    if (image.mimetype === "image/jpeg" ||
-        image.mimetype === "image/jpg" ||
-        image.mimetype === "image/png") {
+    destination: function (req: Request, file, cb) {
+        cb(null, './images');
+    },
 
-        return cb(null, true);
-    }
-    else {
+    filename: function (req: Request, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix)
+  }
+});
 
-        return cb(null, false);
-
-    }
-
-}
-
-const memorystorage = multer.memoryStorage();
-var uploader = multer({ storage: memorystorage, fileFilter: filter }).single("imagedata");
-
+const upload = multer({ storage:mystorage });
 const buycontroller: BuyController = new BuyController();
 export const buyrouter = Router();
 
-buyrouter.delete(`/deletebuy/:_id`, buycontroller.deleteBuy);
-buyrouter.put('/putbuy', uploader, buycontroller.putBuy);
-buyrouter.post('/postbuy', uploader, buycontroller.postBuy);
+buyrouter.delete(`/deletebuy/:_id/:imgid`, buycontroller.deleteBuy);
+buyrouter.put('/putbuy', buycontroller.putBuy);
+buyrouter.put('/putimg/:imgid', buycontroller.putImg);
+buyrouter.post('/postbuy', buycontroller.postBuy);
+buyrouter.post('/postimg', upload.single('imagedata'), buycontroller.postImg);
 buyrouter.get('/:_id', buycontroller.getBuy);
 buyrouter.get('/', buycontroller.getBuys);

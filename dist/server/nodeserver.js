@@ -37,6 +37,7 @@ mongoclient.connect(function (err, client) {
     }
 });
 server.use(Express.json());
+//server.use(Express.static(__dirname));
 server.use("/api/wires", wirerouter);
 server.use("/api/coils", coilrouter);
 server.use("/api/orders", orderrouter);
