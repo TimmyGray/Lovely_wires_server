@@ -4,6 +4,7 @@ import { Buy } from '../models/buy.js';
 import * as fs from 'fs';
 import { Image } from '../models/image.js';
 import { Multer } from 'multer';
+import { mkdir } from 'fs/promises';
 
 export class BuyController {
 
@@ -117,22 +118,29 @@ export class BuyController {
 
         if (image) {
 
+			const path: string = `./images/${image?.filename}`;
 			const imagestore: GridFSBucket = req.app.locals.imagestorage;
 			const imgid: ObjectId = new ObjectId(req.params.imgid);
+
 			imagestore.delete(imgid).then(() => {
 
 				if (image != undefined) {
 
-					fs.createReadStream(`./images/${image?.filename}`).pipe(
+					fs.createReadStream(path).pipe(
 
 						imagestore.openUploadStreamWithId(imgid, image.filename, { contentType: `${image?.mimetype}` })
 
 					);
 
+					fs.rm(path, () => {
+
+						console.log('The temp image removed');
+
+					});
+
 					let editimage: Image = new Image(
 						imgid,
 						image.filename,
-						image.buffer,
 						image.size,
 						image.mimetype);
 
@@ -151,7 +159,7 @@ export class BuyController {
 
 		}
 
-		console.log('The image no editing');
+		console.log('The image not edit');
 		return res.sendStatus(400);
 
 	}
@@ -165,19 +173,21 @@ export class BuyController {
 
 		if (image) {
 
+			const path: string = `./images/${image.filename}`;
 			const imagestore: GridFSBucket = req.app.locals.imagestorage;
-			let imageid: ObjectId = fs.createReadStream(`./images/${image.filename}`).pipe(imagestore.openUploadStream(image.filename, {
+			let imageid: ObjectId = fs.createReadStream(path).pipe(imagestore.openUploadStream(image.filename, {
 				contentType: `${image.mimetype}`
 			}
 			)).id;
-
+			fs.rm(path, () => {
+				console.log('The temp image removed');
+			});
 			console.log(imageid);
 
 			let finalimg: Image = new
 				Image(
 					imageid,
 					image.filename,
-					image.buffer,
 					image.size,
 					image.mimetype);
 
@@ -233,7 +243,6 @@ export class BuyController {
 					_id: buy.image?._id,
 					name: buy.image?.name,
 					size: buy.image?.size,
-					bytes: buy.image?.bytes,
 					type: buy.image?.type
 				}
 			});

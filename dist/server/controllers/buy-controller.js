@@ -59,12 +59,16 @@ export class BuyController {
         let image = req.file;
         console.log(image);
         if (image) {
+            const path = `./images/${image?.filename}`;
             const imagestore = req.app.locals.imagestorage;
             const imgid = new ObjectId(req.params.imgid);
             imagestore.delete(imgid).then(() => {
                 if (image != undefined) {
-                    fs.createReadStream(`./images/${image?.filename}`).pipe(imagestore.openUploadStreamWithId(imgid, image.filename, { contentType: `${image?.mimetype}` }));
-                    let editimage = new Image(imgid, image.filename, image.buffer, image.size, image.mimetype);
+                    fs.createReadStream(path).pipe(imagestore.openUploadStreamWithId(imgid, image.filename, { contentType: `${image?.mimetype}` }));
+                    fs.rm(path, () => {
+                        console.log('The temp image removed');
+                    });
+                    let editimage = new Image(imgid, image.filename, image.size, image.mimetype);
                     console.log(`Upload successfully:${editimage}`);
                     return res.send(editimage);
                 }
@@ -73,7 +77,7 @@ export class BuyController {
                 return res.status(400).send(`Bad request ${e}`);
             });
         }
-        console.log('The image no editing');
+        console.log('The image not edit');
         return res.sendStatus(400);
     }
     postImg(req, res) {
@@ -81,12 +85,16 @@ export class BuyController {
         let image = req.file;
         console.log(image);
         if (image) {
+            const path = `./images/${image.filename}`;
             const imagestore = req.app.locals.imagestorage;
-            let imageid = fs.createReadStream(`./images/${image.filename}`).pipe(imagestore.openUploadStream(image.filename, {
+            let imageid = fs.createReadStream(path).pipe(imagestore.openUploadStream(image.filename, {
                 contentType: `${image.mimetype}`
             })).id;
+            fs.rm(path, () => {
+                console.log('The temp image removed');
+            });
             console.log(imageid);
-            let finalimg = new Image(imageid, image.filename, image.buffer, image.size, image.mimetype);
+            let finalimg = new Image(imageid, image.filename, image.size, image.mimetype);
             console.log(finalimg);
             return res.send(finalimg);
         }
@@ -118,7 +126,6 @@ export class BuyController {
                     _id: buy.image?._id,
                     name: buy.image?.name,
                     size: buy.image?.size,
-                    bytes: buy.image?.bytes,
                     type: buy.image?.type
                 }
             });
