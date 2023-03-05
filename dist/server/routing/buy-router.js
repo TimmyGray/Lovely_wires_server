@@ -6,7 +6,8 @@ const mystorage = multer.diskStorage({
         cb(null, './images');
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const extension = file.mimetype.split('/');
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + '.' + extension[1];
         cb(null, file.fieldname + '-' + uniqueSuffix);
     }
 });
@@ -15,9 +16,10 @@ const buycontroller = new BuyController();
 export const buyrouter = Router();
 buyrouter.delete(`/deletebuy/:_id/:imgid`, buycontroller.deleteBuy);
 buyrouter.put('/putbuy', buycontroller.putBuy);
-buyrouter.put('/putimg/:imgid', buycontroller.putImg);
+buyrouter.put('/putimg/:imgid', upload.single('editimagedata'), buycontroller.putImg);
 buyrouter.post('/postbuy', buycontroller.postBuy);
 buyrouter.post('/postimg', upload.single('imagedata'), buycontroller.postImg);
+buyrouter.get('/getimg/:imgid', buycontroller.getImg);
 buyrouter.get('/:_id', buycontroller.getBuy);
 buyrouter.get('/', buycontroller.getBuys);
 //# sourceMappingURL=buy-router.js.map

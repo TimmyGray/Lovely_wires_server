@@ -32,6 +32,13 @@ export class BuyController {
             return res.send(data);
         });
     }
+    getImg(req, res) {
+        console.log('Get image');
+        const imgid = new ObjectId(req.params.imgid);
+        const imagestore = req.app.locals.imagestorage;
+        const path = './images';
+        imagestore.openDownloadStream(imgid).pipe(res);
+    }
     putBuy(req, res) {
         console.log('Edit existing buy');
         if (!req.body) {
@@ -39,7 +46,7 @@ export class BuyController {
             return res.status(400).send("Bad request");
         }
         const id = new ObjectId(req.body._id);
-        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, req.body.img);
+        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, req.body.image);
         const collection = req.app.locals.buyscollection;
         collection.findOneAndUpdate({ _id: id }, { $set: buy }, { returnDocument: 'after' }, (e, data) => {
             if (e) {
@@ -50,35 +57,40 @@ export class BuyController {
             return res.send(data?.value);
         });
     }
-    putImg(req, res) {
+    async putImg(req, res) {
         console.log('Edit existing image');
         if (!req.params) {
             console.error('Empty request params');
             return res.status(400).send('Empty request params');
         }
         let image = req.file;
-        console.log(image);
         if (image) {
+            console.log(`Image to put:`);
+            console.log(image);
             const path = `./images/${image?.filename}`;
             const imagestore = req.app.locals.imagestorage;
             const imgid = new ObjectId(req.params.imgid);
-            imagestore.delete(imgid).then(() => {
+            await imagestore.delete(imgid).then(() => {
                 if (image != undefined) {
                     fs.createReadStream(path).pipe(imagestore.openUploadStreamWithId(imgid, image.filename, { contentType: `${image?.mimetype}` }));
-                    fs.rm(path, () => {
-                        console.log('The temp image removed');
-                    });
                     let editimage = new Image(imgid, image.filename, image.size, image.mimetype);
-                    console.log(`Upload successfully:${editimage}`);
-                    return res.send(editimage);
+                    console.log(`Upload successfully`);
+                    console.log(editimage);
+                    res.send(editimage);
                 }
             }).catch((e) => {
                 console.error(e);
-                return res.status(400).send(`Bad request ${e}`);
+                res.status(400).send(`Bad request ${e}`);
+            }).finally(() => {
+                fs.rm(path, () => {
+                    return console.log('The temp image removed');
+                });
             });
         }
-        console.log('The image not edit');
-        return res.sendStatus(400);
+        else {
+            console.log('The image not edit');
+            return res.sendStatus(400);
+        }
     }
     postImg(req, res) {
         console.log('Insert image to storage');
@@ -87,6 +99,10 @@ export class BuyController {
         if (image) {
             const path = `./images/${image.filename}`;
             const imagestore = req.app.locals.imagestorage;
+            //let imageid: ObjectId = image.stream.pipe(imagestore.openUploadStream(image.filename, {
+            //	contentType: `${image.mimetype}`
+            //}
+            //)).id;
             let imageid = fs.createReadStream(path).pipe(imagestore.openUploadStream(image.filename, {
                 contentType: `${image.mimetype}`
             })).id;
@@ -107,7 +123,7 @@ export class BuyController {
             console.log("Empty request");
             return res.status(400).send("Bad request");
         }
-        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, req.body.img);
+        const buy = new Buy(req.body.name, req.body.description, req.body.cost, req.body.item, req.body.count, req.body.image);
         const collection = req.app.locals.buyscollection;
         collection.insertOne(buy, (e, data) => {
             if (e) {
@@ -122,12 +138,7 @@ export class BuyController {
                 item: buy.item,
                 cost: buy.cost,
                 count: buy.count,
-                img: {
-                    _id: buy.image?._id,
-                    name: buy.image?.name,
-                    size: buy.image?.size,
-                    type: buy.image?.type
-                }
+                img: req.body.image
             });
         });
     }
