@@ -283,7 +283,7 @@ export class BuyController {
 		}
 
 		const id: ObjectId = new ObjectId(req.params._id);
-		const imgeid: ObjectId = new ObjectId(req.params.imgid);
+		const imgid: ObjectId = new ObjectId(req.params.imgid);
 		const collection: Collection = req.app.locals.buyscollection;
 		const imagestore: GridFSBucket = req.app.locals.imagestorage;
 
@@ -298,7 +298,7 @@ export class BuyController {
 
 			console.log(data?.value);
 
-			imagestore.delete(imgeid).then(() => {
+			imagestore.delete(imgid).then(() => {
 
 				console.log('The image deleted');
 

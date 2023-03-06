@@ -1,1 +1,0 @@
-{"version":3,"file":"IOrder.js","sourceRoot":"","sources":["../../../src/server/models/IOrder.ts"],"names":[],"mappings":"AAAA,IAAK,WAOJ;AAPD,WAAK,WAAW;IAEZ,2EAAmB,CAAA;IACnB,+CAAK,CAAA;IACL,6CAAI,CAAA;IACJ,qDAAQ,CAAA;AAEZ,CAAC,EAPI,WAAW,KAAX,WAAW,QAOf;AAED,MAAM,OAAO,KAAK;IAEd,YAAY,IAAY,EAAE,IAAU,EAAE,MAAmB,EAAE,UAAuB,IAAI,CAAC;CAE1F"}
