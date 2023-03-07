@@ -47,12 +47,14 @@ export class BuyController {
 
 		collection.findOne({ _id: id }, (e, data) => {
 
-			if (e) {
+			if (e || data == undefined || data == null) {
 
 				console.log(e);
-				return res.status(204).send(`No content ${e}`);
+				return res.status(400).send(`No content`);
 
 			}
+
+			
 
 			console.log(data);
 			return res.send(data);
