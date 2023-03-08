@@ -27,5 +27,6 @@ buyrouter.put('/putimg/:imgid',upload.single('editimagedata'), buycontroller.put
 buyrouter.post('/postbuy', buycontroller.postBuy);
 buyrouter.post('/postimg', upload.single('imagedata'), buycontroller.postImg);
 buyrouter.get('/getimg/:imgid', buycontroller.getImg);
+buyrouter.get('/getitembuy/:item', buycontroller.getBuyByItem);
 buyrouter.get('/:_id', buycontroller.getBuy);
 buyrouter.get('/', buycontroller.getBuys);

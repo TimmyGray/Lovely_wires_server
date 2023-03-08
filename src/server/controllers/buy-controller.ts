@@ -64,6 +64,38 @@ export class BuyController {
 
 	}
 
+	getBuyByItem(req: Request, res: Response) {
+
+		console.log('Get one buy from storage by item field');
+
+		if (!req.body) {
+
+			console.log("Empty request");
+			return res.status(400).send("Bade request");
+
+		}
+
+		const buyitem: string = req.params.item;
+		const collection: Collection = req.app.locals.buyscollection;
+
+		collection.findOne({ item: buyitem }, (e, data) => {
+
+			if (e || data == undefined || data == null) {
+
+				console.log(e);
+				return res.status(400).send(`No content`);
+
+			}
+
+
+
+			console.log(data);
+			return res.send(data);
+
+		});
+
+	}
+
 	getImg(req: Request, res: Response) {
 
 		console.log('Get image');
