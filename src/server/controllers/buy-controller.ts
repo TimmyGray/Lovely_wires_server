@@ -96,6 +96,71 @@ export class BuyController {
 
 	}
 
+	getArrayOfBuys(req: Request, res: Response) {
+
+		console.log('Get array of buys from storage');
+
+		let paramshead = JSON.parse(req.headers.params as string);
+		if (paramshead == undefined) {
+
+			console.log("Empty request");
+			return res.status(400).send('Empty request');
+
+        }
+		let paramstofind: string[] = paramshead.arrayofbuys as string[];
+
+		const collection: Collection = req.app.locals.buyscollection;
+		collection.find({ item: {$in: paramstofind}  }).toArray((e, value) => {
+
+			if (e || value == undefined) {
+
+				console.log(e);
+				return res.status(400).send(`Bad requet ${e}`);
+
+			}
+			console.log('paramstofind');
+			console.log(paramstofind);
+			console.log('find items');
+			console.log(value);
+			let arraytosend = new Array();
+			let arrayofitems = new Array();
+
+			value.forEach(b => {
+
+				arrayofitems.push(b.item);
+
+			});
+
+			for (var i = 0; i < paramstofind.length; i++) {
+
+				if (arrayofitems.includes(paramstofind[i])) {
+
+					let buy = value.find(b => b.item == paramstofind[i]);
+					console.log(`This buy was found in storage:${buy?.item}`);
+
+					arraytosend.push(buy);
+
+				}
+                else {
+
+					console.log(`This buy was not found in storage: ${paramstofind[i]}`);
+
+					let emptybuy: Buy = new Buy('', '', 0, paramstofind[i], -999, null);
+					arraytosend.push(emptybuy);
+
+
+                }
+
+            }
+
+			console.log(arraytosend);
+			return res.send(arraytosend);
+
+
+		});
+
+	}
+
 	getImg(req: Request, res: Response) {
 
 		console.log('Get image');

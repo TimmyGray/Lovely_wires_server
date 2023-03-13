@@ -65,10 +65,7 @@ export class OrderController {
 
                     let settings: any = JSON.parse(data);
                     
-
-                    console.log(data);
-                    console.log(settings);
-                    let sender: MailSender = new MailSender(settings.email, settings.password, editOrder);
+                    let sender: MailSender = new MailSender(settings.email, settings.password, editOrder, req.params.comment);
                     sender.sendMail();
 
                 }
