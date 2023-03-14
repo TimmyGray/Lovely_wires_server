@@ -43,6 +43,8 @@ mongoclient.connect(function (err, client) {
         server.locals.buyscollection = client.db('wiresdb').collection('buys');
         server.locals.imagestorage = new mongodb.GridFSBucket(client.db("wiresdb"), { bucketName:"imagestore" });
 
+        server.locals.testcollection = client.db("wiresdb").collection("testcollection");
+
         server.listen(port, function () {
             console.log(`create client server listen on port ${port}...`);
         });

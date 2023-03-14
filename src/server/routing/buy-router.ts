@@ -22,6 +22,7 @@ const buycontroller: BuyController = new BuyController();
 export const buyrouter = Router();
 
 buyrouter.delete(`/deletebuy/:_id/:imgid`, buycontroller.deleteBuy);
+buyrouter.put('/putarrayofbuys', buycontroller.putArrayOfBuys);
 buyrouter.put('/putbuy', buycontroller.putBuy);
 buyrouter.put('/putimg/:imgid',upload.single('editimagedata'), buycontroller.putImg);
 buyrouter.post('/postbuy', buycontroller.postBuy);

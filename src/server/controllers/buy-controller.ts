@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import { Image } from '../models/image.js';
 import { Multer } from 'multer';
 import { mkdir } from 'fs/promises';
+import console from 'console';
 
 export class BuyController {
 
@@ -211,6 +212,52 @@ export class BuyController {
 			return res.send(data?.value);
 
 		});
+	}
+
+
+	async putArrayOfBuys(req: Request,res:Response) {
+	
+		console.log("Put array of buys");
+
+		if (!req.body) {
+
+			console.log('Empty request!');
+			return res.status(400).send("Empty request");
+
+		}
+
+		let buystoupdate = new Array();
+		buystoupdate = req.body;		
+		console.log(buystoupdate);
+		let buystosend = new Array();
+		const collection: Collection = req.app.locals.buyscollection;
+
+		for (var i = 0; i < buystoupdate.length; i++) {
+
+			await collection.findOneAndUpdate({ item: buystoupdate[i].item }, { $set: { count: buystoupdate[i].count } }, { returnDocument: "after" })
+
+				.then(value => {
+
+					console.log("Successfull update buy");
+					buystosend.push(value.value);
+					console.log(value);
+
+				})
+				.catch(e => {
+
+					console.log("Not Successfull update buy");
+					console.log(e);
+					return res.status(500).send(`Server error: ${e}`);
+
+				});
+
+
+        }
+		
+		console.log(buystosend);
+		return res.send(buystosend);
+
+
 	}
 
 	async putImg(req: Request, res: Response) {
