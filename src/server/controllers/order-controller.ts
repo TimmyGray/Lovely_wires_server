@@ -8,6 +8,8 @@ export class OrderController {
 
     getOrders(req: Request, res:Response) {
 
+		console.log("Get all orders");
+
         const collection: Collection = req.app.locals.ordercollection;
 
         collection.find({}).toArray(function (e, data) {
@@ -26,6 +28,8 @@ export class OrderController {
     }
 
     putOrder(req: Request, res: Response) {
+
+		console.log("Edit order");
 
         if (!req.body) {
 
@@ -81,6 +85,8 @@ export class OrderController {
     }
 
     deleteOrder(req: Request, res: Response) {
+
+		console.log("Delete order from storage");
 
         if (!req.body) {
 

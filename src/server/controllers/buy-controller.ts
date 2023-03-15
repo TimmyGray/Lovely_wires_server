@@ -417,7 +417,7 @@ export class BuyController {
 		});
 	}
 
-	deleteBuy(req: Request, res: Response) {
+	async deleteBuy(req: Request, res: Response) {
 
 		console.log('Delete buy from storage');
 
@@ -433,7 +433,7 @@ export class BuyController {
 		const collection: Collection = req.app.locals.buyscollection;
 		const imagestore: GridFSBucket = req.app.locals.imagestorage;
 
-		collection.findOneAndDelete({ _id: id }, (e, data) => {
+		collection.findOneAndDelete({ _id: id }, async (e, data) => {
 
 			if (e) {
 
@@ -444,7 +444,7 @@ export class BuyController {
 
 			console.log(data?.value);
 
-			imagestore.delete(imgid).then(() => {
+			await imagestore.delete(imgid).then(() => {
 
 				console.log('The image deleted');
 

@@ -8,6 +8,8 @@ export class ConnectorController {
 
     getConnectors(req: Request, res: Response) {
 
+		console.log("Get all connectors");
+
         const collection: Collection = req.app.locals.connectorcollection;
 
         collection.find({}).toArray(function (e, data) {
@@ -28,6 +30,8 @@ export class ConnectorController {
     }
 
     getConnector(req: Request, res: Response) {
+
+		console.log("Get one connector from storage");
 
         if (!req.body) {
 
@@ -57,6 +61,7 @@ export class ConnectorController {
 
     postConnector(req: Request, res: Response) {
 
+		console.log("Add connector to storage");
 
         if (!req.body) {
 
@@ -95,6 +100,8 @@ export class ConnectorController {
 
     putConnector(req: Request, res: Response) {
 
+		console.log("Edit connector");
+
         if (!req.body) {
 
             console.log("Emty request");
@@ -124,6 +131,8 @@ export class ConnectorController {
     }
 
     deleteConnector(req: Request, res: Response) {
+
+		console.log("Delete connector from storage");
 
         if (!req.body) {
 

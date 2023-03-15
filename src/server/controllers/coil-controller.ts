@@ -6,6 +6,8 @@ export class CoilController {
 
     getCoils(req:Request,res:Response) {
 
+		console.log("Get all coils from storage");
+
         const collection: Collection = req.app.locals.coilcollection;
 
         collection.find({}).toArray(function(err, result){
@@ -27,6 +29,8 @@ export class CoilController {
     }
 
     getCoil(req:Request,res:Response) {
+
+		console.log("Get one coil from storage");
 
         if (!req.body) {
 
@@ -59,6 +63,8 @@ export class CoilController {
     }
 
     postCoil(req: Request, res: Response) {
+
+		console.log("Add coil to storage");
 
         if (!req.body) {
 
@@ -96,6 +102,8 @@ export class CoilController {
 
     editCoil(req: Request, res: Response) {
 
+		console.log("Edit coil");
+
         if (!req.body) {
 
             console.log("Empty request");
@@ -130,6 +138,8 @@ export class CoilController {
 
     deleteCoil(req: Request, res: Response) {
 
+		console.log("Delete one coil from storage");
+
         if (!req.body) {
 
             console.log("Empty request");
@@ -151,7 +161,7 @@ export class CoilController {
             }
 
             console.log(result);
-            return res.send(result);
+            return res.send(result?.value);
 
 
         })

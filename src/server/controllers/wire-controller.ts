@@ -7,7 +7,11 @@ import { Wire } from '../models/wire.js';
 
 export class WiresController {
 
+
     getWires(req: Request, res: Response) {
+
+        console.log("Get all wires from storage");
+
 
         const collection: Collection = req.app.locals.wirecollection;
 
@@ -28,6 +32,8 @@ export class WiresController {
     }
 
     getWire(req: Request, res: Response) {
+
+		console.log("Get one wire");
 
         if (!req.body) {
 
@@ -56,7 +62,9 @@ export class WiresController {
     }
 
     getOrderWires(req: Request,res:Response) {
-
+		
+		console.log("Get ordered wires");
+		
         if (!req.body) {
 
             console.log("Empty request");
@@ -150,6 +158,8 @@ export class WiresController {
 
     postWire(req: Request, res: Response) {
 
+		console.log("Add wire to storage");
+
         if (!req.body) {
 
             console.log("Empty request");
@@ -188,7 +198,9 @@ export class WiresController {
 
 
     editWire(req: Request, res: Response) {
-
+		
+		console.log("Edit wire");
+		
         if (!req.body) {
             console.log("Empty request");
             return res.status(400).send("Bad request");
@@ -222,7 +234,8 @@ export class WiresController {
   
 
     deleteWire(req: Request, res: Response) {
-
+		
+		console.log("Delete wire from storage");
         if (!req.body) {
             console.log("Empty request");
             return res.status(400).send("Bad request");
@@ -239,7 +252,7 @@ export class WiresController {
             }
 
             res.send(result);
-            return console.log(result);
+            return console.log(result?.value);
 
         })
 

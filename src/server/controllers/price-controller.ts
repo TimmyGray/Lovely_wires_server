@@ -5,7 +5,10 @@ import { IItem } from '../models/IItem.js';
 
 export class PriceController {
 
+
     getPrices(req: Request, res: Response) {
+
+        console.log("Get all prices from storage");
 
         const collection: Collection = req.app.locals.pricecollection;
         collection.find({}).toArray((e, data) => {
@@ -24,6 +27,8 @@ export class PriceController {
     }
 
     getPrice(req: Request, res: Response) {
+
+		console.log("Get price from storage");
 
         if (!req.body) {
 
@@ -49,6 +54,8 @@ export class PriceController {
     }
 
     postPrice(req: Request, res: Response) {
+
+		console.log("Add price to storage");
 
         if (!req.body) {
 
@@ -86,6 +93,8 @@ export class PriceController {
 
     putPrice(req: Request, res: Response) {
 
+		console.log("Edit price");
+
         if (!req.body) {
 
             console.log("Empty request");
@@ -118,6 +127,8 @@ export class PriceController {
     }
 
     deletePrice(req: Request, res: Response) {
+
+		console.log("Delete price from storage");
 
         if (!req.body) {
 
