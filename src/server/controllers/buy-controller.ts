@@ -146,7 +146,7 @@ export class BuyController {
 
 					console.log(`This buy was not found in storage: ${paramstofind[i]}`);
 
-					let emptybuy: Buy = new Buy('', '', 0, paramstofind[i], -999, null);
+					let emptybuy: Buy = new Buy('', '', 0, paramstofind[i],"", -999, null);
 					arraytosend.push(emptybuy);
 
 
@@ -193,6 +193,7 @@ export class BuyController {
 				req.body.description,
 				req.body.cost,
 				req.body.item,
+				req.body.itemid,
 				req.body.count,
 				req.body.image);
 
@@ -342,11 +343,6 @@ export class BuyController {
 			const path: string = `./images/${image.filename}`;
 			const imagestore: GridFSBucket = req.app.locals.imagestorage;
 
-			//let imageid: ObjectId = image.stream.pipe(imagestore.openUploadStream(image.filename, {
-			//	contentType: `${image.mimetype}`
-			//}
-			//)).id;
-
 			let imageid: ObjectId = fs.createReadStream(path).pipe(imagestore.openUploadStream(image.filename, {
 				contentType: `${image.mimetype}`
 			}
@@ -389,6 +385,7 @@ export class BuyController {
 				req.body.description,
 				req.body.cost,
 				req.body.item,
+				req.body.itemid,
 				req.body.count,
 				req.body.image);
 
@@ -409,6 +406,7 @@ export class BuyController {
 				name: buy.name,
 				description: buy.description,
 				item: buy.item,
+				itemid:buy.itemid,
 				cost: buy.cost,
 				count: buy.count,
 				img: req.body.image

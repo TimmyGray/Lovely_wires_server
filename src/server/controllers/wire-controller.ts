@@ -43,7 +43,7 @@ export class WiresController {
         }
 
         const id: ObjectId = new ObjectId(req.params._id);
-        const collection: Collection = req.app.locals.wirescollection;
+        const collection: Collection = req.app.locals.wirecollection;
 
         collection.findOne({ _id: id }, (e, data) => {
 
@@ -167,7 +167,14 @@ export class WiresController {
         }
 
 
-        const newwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
+        const newwire: Wire = new Wire(
+            req.body.name,
+            req.body.firstconn,
+            req.body.secondconn,
+            req.body.length,
+            req.body.coil,
+            req.body.numberofconnectors);
+
         const collection: Collection = req.app.locals.wirecollection;
 
         collection.insertOne(newwire, function (err, result) {
@@ -185,7 +192,8 @@ export class WiresController {
                 firstconn: newwire.firstconn,
                 secondconn: newwire.secondconn,
                 length: newwire.length,
-                coil: newwire.coil
+                coil: newwire.coil,
+				numberofconnectors:newwire.numberofconnectors
             });
 
 
@@ -209,7 +217,14 @@ export class WiresController {
 
         const id = new ObjectId(req.body._id);
 
-        const editwire: Wire = new Wire(req.body.name, req.body.firstconn, req.body.secondconn, req.body.length, req.body.coil);
+        const editwire: Wire = new Wire(
+            req.body.name,
+            req.body.firstconn,
+            req.body.secondconn,
+            req.body.length,
+            req.body.coil,
+            req.body.numberofconnectors);
+
         const collection: Collection = req.app.locals.wirecollection;
 
         collection.findOneAndUpdate({ _id: id }, { $set: editwire }, { returnDocument: 'after' }, function (err, result) {

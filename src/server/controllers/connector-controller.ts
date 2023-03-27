@@ -3,6 +3,7 @@ import { ConnectorType } from '../models/enums.js';
 import { Price } from '../models/price.js';
 import { Collection, ObjectId } from 'mongodb';
 import { Request,Response } from 'express';
+import { async } from 'rxjs';
 
 export class ConnectorController {
 
@@ -17,7 +18,7 @@ export class ConnectorController {
             if (e) {
 
                 console.log(e);
-                return res.status(400).send(e);
+                return res.status(400).send(`Bad request ${e.message}`);
 
             }
 
@@ -48,7 +49,7 @@ export class ConnectorController {
             if (e) {
 
                 console.log(e);
-                return res.status(204).send(`No content ${e}`);
+                return res.status(204).send(`No content ${e.message}`);
 
             }
 
@@ -80,7 +81,7 @@ export class ConnectorController {
             if (e) {
 
                 console.log(e);
-                return res.status(400).send(e);
+                return res.status(400).send(`Bad request ${e.message}`);
 
             }
 
@@ -118,7 +119,7 @@ export class ConnectorController {
             if (e) {
 
                 console.log(e);
-                return res.status(400).send(e);
+                return res.status(400).send(`Bad request ${e.message}`);
 
             }
 
@@ -127,6 +128,60 @@ export class ConnectorController {
 
         })
 
+
+    }
+
+    async putArrayOfConn(req:Request,res:Response){
+
+        console.log("Edit array of connectors");
+
+        if(!req.body){
+
+            console.error("Empty request");
+            return res.status(400).send("Empty request");
+
+        }
+
+        let arraytoput = req.body;
+        console.log("Array to put:");
+        console.log(arraytoput);
+
+        let arrayofids = new Array();
+        for (let con of arraytoput) {
+
+            arrayofids.push(new ObjectId(con._id));
+        }
+
+        console.log("Array of id:");
+        console.log(arrayofids);
+
+        let arraytosend = new Array();
+        const collection: Collection = req.app.locals.connectorcollection;
+
+        for (var i = 0; i < arrayofids.length; i++) {
+
+            await collection.findOneAndUpdate({ _id: arrayofids[i] }, { $set: { count: arraytoput[i].count } }, { returnDocument: "after" })
+
+                .then(value => {
+
+                    console.log('Ediit successful');
+                    console.log(value?.value);
+                    arraytosend.push(value?.value);
+
+                })
+
+                .catch(e => {
+
+                    console.error(e);
+                    return res.status(400).send(`Bad request ${e.message}`);
+
+                })
+                
+        }
+
+        console.log('Array to send:');
+        console.log(arraytosend);
+        return res.send(arraytosend);
 
     }
 

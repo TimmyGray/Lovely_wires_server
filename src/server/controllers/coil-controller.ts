@@ -128,7 +128,7 @@ export class CoilController {
                 }
 
                 console.log(result);
-                return res.send(result);
+                return res.send(result?.value);
 
 
             }

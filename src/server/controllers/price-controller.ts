@@ -2,6 +2,7 @@ import { Price } from '../models/price.js';
 import { Request, Response } from 'express';
 import { Collection, ObjectId } from 'mongodb';
 import { IItem } from '../models/IItem.js';
+import console from 'console';
 
 export class PriceController {
 
@@ -38,16 +39,112 @@ export class PriceController {
         }
 
         const id: ObjectId = new ObjectId(req.params._id);
+        console.log('id to find:');
+        console.log(id);
         const collection: Collection = req.app.locals.pricecollection;
-        collection.findOne({ _id: id }, (e, data) => {
+        collection.findOne({ "itemofprice._id": id },async (e, data) => {
 
             if (e) {
-                console.log(e);
-                return res.status(404).send(e);
+
+                console.log('Bad request');
+                return res.status(404).send(`Bad request:${e}`);
+
             }
 
-            console.log(data);
-            return res.send(data);
+            if (data == null) {
+
+                console.log('try to find price by item id');
+
+                await collection.findOne({ "itemofprice._id": req.params._id }, (e, data) => {
+
+                    if (e || data == null) {
+
+                        console.log(e);
+                        return res.status(400).send(`Bad request: ${e}`);
+
+                    }
+
+                    console.log(data);
+                    return res.send(data);
+
+                })
+
+            }
+            else {
+
+                console.log(data);
+                return res.send(data);
+
+            }
+
+        });
+
+    }
+
+    getArrayOfPrices(req:Request, res:Response){
+
+        console.log("Get array of prices");
+
+        let paramshead = JSON.parse(req.headers.params as string);
+        if (paramshead == undefined) {
+
+            console.log('Empty request');
+            return res.status(400).send('Empty request');
+
+        }
+
+        let paramstofind: string[] = paramshead.arrayofprices as string[];
+        const collecction: Collection = req.app.locals.pricecollection;
+        collecction.find({ "itemofprice._id": { $in: paramstofind } }).toArray((e, value) => {
+
+            if (e || value == undefined) {
+
+                console.log(e);
+                return res.status(400).send(`Bad request: ${e}`);
+
+            }
+            console.log("Prices to find:");
+            console.log(paramstofind);
+            console.log('Found prices:');
+            console.log(value);
+
+            let arrayoffound = new Array();
+            let arraytosend = new Array();
+            let find: boolean = false;
+
+            for (var i = 0; i < value.length; i++) {
+
+                console.log(value[i].name)
+                arrayoffound.push(value[i]);
+
+            }
+           
+
+            for (var i = 0; i < paramstofind.length; i++) {
+                find = false;
+                for (var j = 0; j < arrayoffound.length; j++) {
+
+                    if (arrayoffound[j].itemofprice._id == paramstofind[i]) {
+
+                        arraytosend.push(arrayoffound[j]);
+                        find = true;
+                        break;
+
+                    }
+                    
+                   
+                }
+                if (!find) {
+
+                    let price: Price = new Price("", 0, { name: "", type: "" });
+                    arraytosend.push(price);
+
+                }
+
+            }
+
+            console.log(arraytosend);
+            return res.send(arraytosend);
 
         });
 

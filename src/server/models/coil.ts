@@ -6,7 +6,7 @@ export class Coil implements IItem {
         public name: string,
         public type: string,
         public typeofsignal: string,
-        public length: number,) { }
+        public length: number) { }
 
 
 }
