@@ -10,6 +10,7 @@ export class Buy {
         public item: string,
 		public itemid:string,
         public count: number,
-        public image: Image | null) { }
+        public image: Image | null,
+        public custom:boolean) { }
 
 }

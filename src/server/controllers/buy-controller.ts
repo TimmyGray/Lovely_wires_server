@@ -146,7 +146,7 @@ export class BuyController {
 
 					console.log(`This buy was not found in storage: ${paramstofind[i]}`);
 
-					let emptybuy: Buy = new Buy('', '', 0, paramstofind[i],"", -999, null);
+					let emptybuy: Buy = new Buy('', '', 0, paramstofind[i], "", -999, null, false );
 					arraytosend.push(emptybuy);
 
 
@@ -195,7 +195,8 @@ export class BuyController {
 				req.body.item,
 				req.body.itemid,
 				req.body.count,
-				req.body.image);
+				req.body.image,
+				req.body.custom);
 
 		const collection: Collection = req.app.locals.buyscollection;
 		
@@ -387,7 +388,8 @@ export class BuyController {
 				req.body.item,
 				req.body.itemid,
 				req.body.count,
-				req.body.image);
+				req.body.image,
+				req.body.custom);
 
 		const collection: Collection = req.app.locals.buyscollection;
 
@@ -409,7 +411,8 @@ export class BuyController {
 				itemid:buy.itemid,
 				cost: buy.cost,
 				count: buy.count,
-				img: req.body.image
+				image: req.body.image,
+				custom: req.body.custom
 			});
 
 		});
