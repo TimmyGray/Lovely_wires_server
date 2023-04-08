@@ -68,8 +68,8 @@ export class OrderController {
                 else {
 
                     let settings: any = JSON.parse(data);
-                    
-                    let sender: MailSender = new MailSender(settings.email, settings.password, editOrder, req.params.comment);
+
+                    let sender: MailSender = new MailSender(settings.email, settings.password, editOrder, req.params.comment, settings.host, settings.name);
                     sender.sendMail();
 
                 }

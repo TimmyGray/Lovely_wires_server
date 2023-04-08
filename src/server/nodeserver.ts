@@ -12,9 +12,10 @@ import console from 'console';
 import { env } from 'process';
 import multer from 'multer';
 
-const mongoclient: MongoClient = new MongoClient("mongodb://127.0.0.1:12908");
 
-const port: string | number = process.env.PORT || 3200;
+const mongoclient: MongoClient = new MongoClient(`mongodb://${process.argv[2]}`);
+
+const port: string | number = process.env.PORT || process.argv[3];
 
 const server = Express();
 

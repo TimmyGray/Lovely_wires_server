@@ -365,3 +365,4 @@ FodyWeavers.xsd
 package-lock.json
 
 /dist
+emailsettings.json
